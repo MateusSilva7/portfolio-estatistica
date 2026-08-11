@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TCC — Regressão de Cox com Riscos Competitivos | Mateus Silva</title>
+<meta name="description" content="Trabalho de Conclusão de Curso em andamento — Estatística, UnB. Modelo de Cox com riscos competitivos aplicado a dados de câncer de cabeça e pescoço.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{--ink:#12182b;--sub:#5b6472;--line:#e5e7f0;--bg:#f7f8fb;--card:#ffffff;--accent:#4f46e5;--accent-dk:#3730a3}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);line-height:1.65;font-size:15.5px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:900px;margin:0 auto;padding:0 24px}
+.mono{font-family:'IBM Plex Mono',monospace}
+.topbar{background:#0c1024;padding:14px 0}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between}
+.topbar a{color:#c7cbe8;font-size:13px;font-weight:600}
+header.hero{padding:56px 0 40px;border-bottom:1px solid var(--line)}
+.status{display:inline-flex;align-items:center;gap:8px;background:#fff4e5;color:#9a5b00;border:1px solid #f3d9ad;border-radius:999px;padding:7px 16px;font-size:12px;font-weight:700;margin-bottom:20px}
+.status .dot{width:7px;height:7px;border-radius:50%;background:#d97706}
+h1{font-size:clamp(26px,4vw,38px);line-height:1.18;font-weight:800;margin-bottom:10px;max-width:22ch}
+.subtitle{color:var(--sub);font-size:17px;margin-bottom:20px}
+.meta{display:flex;gap:18px;flex-wrap:wrap;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--sub)}
+.meta img{height:32px;vertical-align:middle;margin-right:8px}
+section{padding:40px 0;border-bottom:1px solid var(--line)}
+h2{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+h3{font-size:18px;font-weight:700;margin:20px 0 8px}
+p{margin-bottom:12px;color:#2b3142}
+ul{margin:0 0 12px 20px;color:#2b3142}
+li{margin-bottom:6px}
+.callout{background:#eef0fd;border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:16px 0;font-size:14.5px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:700px){.grid2{grid-template-columns:1fr}}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:16px 0}
+th,td{padding:8px 10px;border:1px solid var(--line);text-align:center}
+th{background:#f0f1f8;font-weight:700}
+.timeline{display:grid;gap:10px;margin-top:14px}
+.tl-row{display:grid;grid-template-columns:200px 1fr;gap:14px;align-items:center;font-size:13.5px}
+.tl-bar{height:22px;background:#eceefb;border-radius:5px;position:relative;overflow:hidden}
+.tl-fill{height:100%;background:var(--accent)}
+.tl-fill.pending{background:#d6d9ee}
+footer{padding:32px 0;text-align:center;font-size:13px;color:var(--sub)}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="wrap"><a href="../index.html">← Voltar ao portfólio</a></div></div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="status"><span class="dot"></span>TCC EM ANDAMENTO · TCC1 CONCLUÍDO, TCC2 EM EXECUÇÃO</div>
+    <h1>Modelo de Regressão de Cox com Riscos Competitivos</h1>
+    <p class="subtitle">Uma aplicação a dados de câncer de cabeça e pescoço</p>
+    <div class="meta">
+      <span><img src="unb.png" alt="UnB"></span>
+      <span>Departamento de Estatística — Universidade de Brasília</span>
+      <span>·</span>
+      <span>2026</span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>Por que este projeto está aqui assim</h2>
+    <div class="callout">
+      Este TCC ainda não tem resultado final — e este case não finge que tem. A proposta
+      (TCC1) já foi definida e apresentada; a modelagem e os resultados (TCC2) estão em
+      execução agora, conforme o cronograma abaixo. O que está descrito aqui é o
+      <b>objetivo, a metodologia e o status real</b> do projeto — do jeito que estatística
+      de verdade funciona: planejamento antes do resultado.
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Contexto</h2>
+    <p>O câncer de cabeça e pescoço (CCP) ocupa a 7ª posição entre os cânceres mais
+    diagnosticados no mundo, com sobrevida em 5 anos entre 45% e 69%, a depender do sítio
+    anatômico e do estadiamento. Pacientes com CCP estão sujeitos a múltiplas causas de
+    óbito — doença cardiovascular, segunda neoplasia primária, outras causas — não só o
+    câncer em si.</p>
+    <h3>O problema estatístico</h3>
+    <p>Em populações mais idosas, mortes concorrentes podem superar as mortes pelo próprio
+    câncer. Ignorar esses "riscos competitivos" — tratando-os como censura simples no
+    estimador de Kaplan-Meier — <b>infla artificialmente</b> as estimativas de incidência
+    cumulativa do desfecho de interesse. É um erro metodológico comum na literatura
+    biomédica, e o TCC ataca exatamente esse ponto.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Objetivo</h2>
+    <p>Aplicar o modelo de regressão de Cox com riscos competitivos a uma coorte de
+    pacientes com câncer de cabeça e pescoço, comparando-o com a abordagem tradicional
+    (Kaplan-Meier tratando óbitos por outras causas como censura) para quantificar a
+    diferença nas estimativas de risco.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Metodologia planejada</h2>
+    <ol style="margin-left:20px;color:#2b3142">
+      <li><b>Análise descritiva</b> — distribuição das covariáveis, proporção de cada
+      desfecho, tempo de seguimento.</li>
+      <li><b>Estimação não paramétrica</b> — curvas de Kaplan-Meier e Função de Incidência
+      Acumulada (estimador de Aalen-Johansen) para a coorte completa e estratificada;
+      teste de Gray para comparação entre grupos.</li>
+      <li><b>Modelagem</b> — regressão de Cox com causas competitivas, com seleção de
+      variáveis por triagem univariada + AIC + relevância clínica.</li>
+      <li><b>Diagnósticos</b> — análise de resíduos, gráficos de verificação dos
+      pressupostos do modelo (riscos proporcionais).</li>
+    </ol>
+    <p class="mono" style="font-size:13px;color:var(--sub)">Software: R — pacotes survival, cmprsk, mstate · Nível de significância: α = 0,05</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Status atual (cronograma real do projeto)</h2>
+    <div class="timeline">
+      <div class="tl-row"><span>Escolha do tema</span><div class="tl-bar"><div class="tl-fill" style="width:100%"></div></div></div>
+      <div class="tl-row"><span>Proposta de projeto</span><div class="tl-bar"><div class="tl-fill" style="width:100%"></div></div></div>
+      <div class="tl-row"><span>Revisão bibliográfica</span><div class="tl-bar"><div class="tl-fill" style="width:100%"></div></div></div>
+      <div class="tl-row"><span>Obtenção dos dados</span><div class="tl-bar"><div class="tl-fill" style="width:100%"></div></div></div>
+      <div class="tl-row"><span>Análise descritiva</span><div class="tl-bar"><div class="tl-fill" style="width:100%"></div></div></div>
+      <div class="tl-row"><span>Relatório parcial 1</span><div class="tl-bar"><div class="tl-fill" style="width:100%"></div></div></div>
+      <div class="tl-row"><span><b>Modelagem</b> ← estamos aqui</span><div class="tl-bar"><div class="tl-fill" style="width:35%"></div></div></div>
+      <div class="tl-row"><span>Discussão dos resultados</span><div class="tl-bar"><div class="tl-fill pending" style="width:100%"></div></div></div>
+      <div class="tl-row"><span>Relatório parcial 2</span><div class="tl-bar"><div class="tl-fill pending" style="width:100%"></div></div></div>
+      <div class="tl-row"><span>Apresentação / Banca</span><div class="tl-bar"><div class="tl-fill pending" style="width:100%"></div></div></div>
+      <div class="tl-row"><span>Entrega final</span><div class="tl-bar"><div class="tl-fill pending" style="width:100%"></div></div></div>
+    </div>
+    <p style="margin-top:18px;font-size:13.5px;color:var(--sub)">Defesa e entrega final previstas para novembro/dezembro de 2026. Esta página será
+    atualizada com os resultados reais assim que a modelagem for concluída.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Mateus Silva — Departamento de Estatística, Universidade de Brasília (UnB) ·
+    <a href="../index.html">Voltar ao portfólio</a>
+  </div>
+</footer>
+
+</body>
+</html>
