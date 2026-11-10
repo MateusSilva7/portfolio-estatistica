@@ -63,7 +63,7 @@ footer a{color:#c7cbe8}
   <div class="wrap">
     <div class="brand">Mateus Silva<span>Estatística &amp; Dados</span></div>
     <div class="nav-links">
-      <a href="#dashboards">Dashboards</a>
+      <a href="#dashboards">Apps &amp; Dashboards</a>
       <a href="#estatistica">Estatística &amp; ML</a>
       <a href="#contato">Contato</a>
     </div>
@@ -74,7 +74,7 @@ footer a{color:#c7cbe8}
   <div class="wrap">
     <div class="kicker">🎓 Estatística — Universidade de Brasília (UnB) · ESTAT</div>
     <h1>Portfólio técnico: dashboards, testes de hipótese e machine learning.</h1>
-    <p>Reúno aqui 9 projetos — do dashboard de gestão publicado em produção à análise
+    <p>Reúno aqui 10 projetos — da aplicação de operação e do dashboard de gestão publicado em produção à análise
     estatística formal com testes de hipótese, passando por machine learning aplicado.
     Todos com código aberto, dados públicos ou fictícios (nunca dados reais de cliente),
     e resultados reais — inclusive quando o resultado é "não deu diferença significativa".</p>
@@ -83,8 +83,8 @@ footer a{color:#c7cbe8}
       <a class="btn btn-ghost" href="https://github.com/MateusSilva7" target="_blank" rel="noopener">GitHub →</a>
     </div>
     <div class="stats">
-      <div class="stat"><b>9</b><span>Projetos no portfólio</span></div>
-      <div class="stat"><b>5</b><span>Dashboards publicados</span></div>
+      <div class="stat"><b>10</b><span>Projetos no portfólio</span></div>
+      <div class="stat"><b>6</b><span>Apps e dashboards publicados</span></div>
       <div class="stat"><b>20+</b><span>Testes estatísticos executados</span></div>
       <div class="stat"><b>1</b><span>TCC em andamento</span></div>
     </div>
@@ -94,10 +94,25 @@ footer a{color:#c7cbe8}
 <section id="dashboards">
   <div class="wrap">
     <div class="sec-kicker">Parte 1</div>
-    <h2 class="sec-title">Dashboards de gestão — publicados, não protótipo</h2>
-    <p class="sec-sub">Painéis R/Shiny em produção real ou derivados de sistemas reais,
-    com dados fictícios pra demonstração pública. Clique e use — não é print.</p>
+    <h2 class="sec-title">Aplicações e dashboards de gestão — publicados, não protótipo</h2>
+    <p class="sec-sub">Aplicações em Python/Streamlit e painéis R/Shiny derivados de sistemas
+    reais em produção, com dados fictícios pra demonstração pública. Clique e use — não é print.</p>
     <div class="grid">
+
+      <div class="card" style="grid-column:1/-1">
+        <div class="card-top"><span class="card-tag tag-live">no ar</span><span class="card-tag" style="background:#eef0fd;color:#4f46e5">destaque</span></div>
+        <h3>Giro Reverso — Logística Reversa de Estoque em Autopeças</h3>
+        <p>Aplicação de operação para uma rede de autopeças: uma regra estatística ("primeiro o que
+        fica", com média móvel ponderada da demanda e múltiplos de embalagem) decide o que volta de cada
+        loja para o CD; um ciclo diário revalida e distribui o trabalho entre compradores; e um quadro
+        kanban acompanha cada pedido em 6 etapas até a entrada da nota. Derivado de sistema real em
+        produção, publicado com um ERP sintético.</p>
+        <div class="card-meta">Python · Streamlit · pandas · Polars · SQLAlchemy · 294 testes</div>
+        <div style="display:flex;gap:18px;flex-wrap:wrap">
+          <a class="card-link" href="https://giro-reverso.streamlit.app" target="_blank" rel="noopener">Abrir o app →</a>
+          <a class="card-link" href="case-giro-reverso/index.html">Ver o case →</a>
+        </div>
+      </div>
 
       <div class="card">
         <div class="card-top"><span class="card-tag tag-live">no ar</span></div>
