@@ -102,14 +102,14 @@ footer a{color:#c7cbe8}
       <div class="card" style="grid-column:1/-1">
         <div class="card-top"><span class="card-tag tag-live">no ar</span><span class="card-tag" style="background:#eef0fd;color:#4f46e5">destaque</span></div>
         <h3>Giro Reverso — Logística Reversa de Estoque em Autopeças</h3>
-        <p>Aplicação de operação para uma rede de autopeças: uma regra estatística ("primeiro o que
-        fica", com média móvel ponderada da demanda e múltiplos de embalagem) decide o que volta de cada
-        loja para o CD; um ciclo diário revalida e distribui o trabalho entre compradores; e um quadro
-        kanban acompanha cada pedido em 6 etapas até a entrada da nota. Derivado de sistema real em
-        produção, publicado com um ERP sintético.</p>
-        <div class="card-meta">Python · Streamlit · pandas · Polars · SQLAlchemy · 294 testes</div>
+        <p>Aplicação de operação para uma rede de autopeças: previsão de demanda (suavização
+        exponencial) e estoque de segurança por nível de serviço definem quanto cada loja precisa manter,
+        e o que passa disso volta ao CD. Um ciclo diário distribui o trabalho entre compradores, um quadro
+        kanban acompanha cada pedido em 6 etapas e uma tela de sensibilidade mostra o trade-off entre
+        disponibilidade e capital parado. Dados sintéticos.</p>
+        <div class="card-meta">Python · Streamlit · pandas · NumPy · SQLAlchemy · 223 testes · demo estática em JS</div>
         <div style="display:flex;gap:18px;flex-wrap:wrap">
-          <a class="card-link" href="https://giro-reverso.streamlit.app" target="_blank" rel="noopener">Abrir o app →</a>
+          <a class="card-link" href="giro-reverso/index.html">Abrir a demonstração →</a>
           <a class="card-link" href="case-giro-reverso/index.html">Ver o case →</a>
         </div>
       </div>
